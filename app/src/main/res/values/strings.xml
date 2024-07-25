@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MyFridge</string>
+
+    <string name="nav_fridge">Home</string>
+    <string name="nav_shopping">장보기</string>
+    <string name="nav_setting">설정</string>
+</resources>
