@@ -5,12 +5,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.yunju.myfridge.MyApplication
 import com.yunju.myfridge.R
 import com.yunju.myfridge.base.BaseFragment
+import com.yunju.myfridge.databinding.FragmentFridgeBinding
+import com.yunju.myfridge.room.FridgeEntity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FridgeFragment : BaseFragment() {
 
@@ -18,23 +23,37 @@ class FridgeFragment : BaseFragment() {
         fun newInstance() = FridgeFragment()
     }
 
-    private val viewModel: FridgeModel by viewModels()
+    private lateinit var binding: FragmentFridgeBinding
+    private var test = 1
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_fridge, container, false)
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_fridge, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val dao = (requireActivity().application as? MyApplication)?.fridgeDao
+        val dao = (mActivity.application as? MyApplication)?.fridgeDao
 
-        lifecycleScope.launch {
-            val id = dao?.getFridgeId()
-            Log.d("yj", "id : $id")
+        binding.btnAdd.setOnClickListener {
+            if (dao != null) {
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        // 데이터베이스 작업을 IO 스레드에서 수행
+                        dao.insertData(FridgeEntity(test.toString()))
+                    }
+                    // UI 업데이트는 메인 스레드에서 수행
+                    test++
+                    val id = withContext(Dispatchers.IO) { dao.getFridgeId() }
+                    Log.d("yj", "id : $id")
+                }
+            } else {
+                Log.d("yj", "dao is null")
+            }
         }
     }
 }
