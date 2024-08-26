@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.yunju.myfridge.MyApplication
 import com.yunju.myfridge.R
 import com.yunju.myfridge.base.BaseFragment
 import com.yunju.myfridge.databinding.FragmentFridgeBinding
@@ -23,6 +21,7 @@ class FridgeFragment : BaseFragment() {
         fun newInstance() = FridgeFragment()
     }
 
+    private val viewModel: FridgeViewModel by viewModels()
     private lateinit var binding: FragmentFridgeBinding
     private var test = 1
 
@@ -37,23 +36,21 @@ class FridgeFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val dao = (mActivity.application as? MyApplication)?.fridgeDao
+
+        observe()
 
         binding.btnAdd.setOnClickListener {
-            if (dao != null) {
-                lifecycleScope.launch {
-                    withContext(Dispatchers.IO) {
-                        // 데이터베이스 작업을 IO 스레드에서 수행
-                        dao.insertData(FridgeEntity(test.toString()))
-                    }
-                    // UI 업데이트는 메인 스레드에서 수행
-                    test++
-                    val id = withContext(Dispatchers.IO) { dao.getFridgeId() }
-                    Log.d("yj", "id : $id")
-                }
-            } else {
-                Log.d("yj", "dao is null")
-            }
+            viewModel.insertData()
+        }
+
+        binding.btnRemove.setOnClickListener{
+            viewModel.deleteFridge()
+        }
+    }
+
+    private fun observe() {
+        viewModel.fridgeId?.observe(mActivity) {
+            Log.d("yj", "id : $it")
         }
     }
 }

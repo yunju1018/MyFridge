@@ -1,5 +1,6 @@
 package com.yunju.myfridge.room
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -15,11 +16,15 @@ interface FridgeDao {
 
     /* 냉장고 ID 반환 */
     @Query("SELECT id FROM fridgeTable")
-    suspend fun getFridgeId() : List<String>
+    fun getFridgeId() : LiveData<List<String>>
 
     /* 냉장고 목록 반환 */
     @Query("SELECT * FROM fridgeTable WHERE id = :fridgeId") // FridgeEntity (tableName : fridge) 에서 fridgeId 가져옴
-    suspend fun getFridgeData(fridgeId: String) : FridgeEntity
+    fun getFridgeData(fridgeId: String) : FridgeEntity
+
+    /* 냉장고 목록 전체 반환, 오름차순 */
+    @Query("SELECT * FROM fridgeTable ORDER BY id ASC")
+    fun getAll() : List<FridgeEntity>
 
     /* 냉장고 목록 수정 */
     @Update
@@ -27,5 +32,5 @@ interface FridgeDao {
 
     /* 냉장고 삭제 */
     @Query("DELETE FROM fridgeTable")
-    suspend fun deleteFridge()
+    suspend fun deleteAllFridge()
 }

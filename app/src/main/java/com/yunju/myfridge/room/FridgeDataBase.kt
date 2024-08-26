@@ -12,18 +12,16 @@ abstract class FridgeDataBase : RoomDatabase() {
     companion object {
         private var INSTANCE: FridgeDataBase? = null
 
-        fun getInstance(context: Context): FridgeDataBase? {
-            if (INSTANCE == null) {
-                synchronized(FridgeDataBase::class) {
-                    INSTANCE = Room.databaseBuilder(
-                        context.applicationContext,
-                        FridgeDataBase::class.java,
-                        "fridge.db"
-                    ).build()
-                }
+        fun getInstance(context: Context): FridgeDataBase {
+            return INSTANCE ?: synchronized(FridgeDataBase::class) {
+                val instance = Room.databaseBuilder(
+                context.applicationContext,
+                FridgeDataBase::class.java,
+                "fridge.db"
+                ).build()
+                INSTANCE = instance
+                instance
             }
-
-            return INSTANCE
         }
     }
 }
