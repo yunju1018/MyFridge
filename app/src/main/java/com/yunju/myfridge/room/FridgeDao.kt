@@ -14,6 +14,10 @@ interface FridgeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertData(data: FridgeEntity)
 
+    /* 조건에 맞는 총 행의 수를 계산 */
+    @Query("SELECT COUNT(*) FROM fridgeTable WHERE id = :fridgeId")
+    fun countById(fridgeId: String): Int
+
     /* 냉장고 ID 반환 */
     @Query("SELECT id FROM fridgeTable")
     fun getFridgeId() : LiveData<List<String>>

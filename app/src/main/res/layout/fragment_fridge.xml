@@ -11,7 +11,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             app:contentInsetStart="0dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,6 +23,8 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="나의 냉장고"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.utils.widget.ImageFilterView
@@ -49,6 +51,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fridgeRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"

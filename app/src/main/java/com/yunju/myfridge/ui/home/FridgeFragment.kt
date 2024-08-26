@@ -1,18 +1,19 @@
 package com.yunju.myfridge.ui.home
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import com.yunju.myfridge.R
 import com.yunju.myfridge.base.BaseFragment
+import com.yunju.myfridge.databinding.EditDialogBinding
 import com.yunju.myfridge.databinding.FragmentFridgeBinding
-import com.yunju.myfridge.room.FridgeEntity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class FridgeFragment : BaseFragment() {
@@ -23,7 +24,7 @@ class FridgeFragment : BaseFragment() {
 
     private val viewModel: FridgeViewModel by viewModels()
     private lateinit var binding: FragmentFridgeBinding
-    private var test = 1
+    private lateinit var fridgeAdapter: FridgeAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,17 +41,47 @@ class FridgeFragment : BaseFragment() {
         observe()
 
         binding.btnAdd.setOnClickListener {
-            viewModel.insertData()
+            val editBinding = EditDialogBinding.inflate(layoutInflater)
+
+            AlertDialog.Builder(mContext)
+                .setTitle("이름을 입력하세요")
+                .setView(editBinding.root)
+                .setPositiveButton("확인", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        val id = editBinding.editText.text.toString()
+                        if(id.isEmpty()) {
+                            Toast.makeText(mContext, "냉장고 이름은 필수 입력 사항입니다.", Toast.LENGTH_SHORT).show()
+                            return
+                        }
+                        viewModel.insertData(id)
+                        Log.d("yj", "id : $id")
+                    }
+                })
+                .setNegativeButton("취소", null)
+                .show()
         }
 
         binding.btnRemove.setOnClickListener{
-            viewModel.deleteFridge()
+            AlertDialog.Builder(mContext)
+                .setTitle("냉장고를 전체 삭제합니다.")
+                .setPositiveButton("확인", object: DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        viewModel.deleteFridge()
+                    }
+                })
+                .setNeutralButton("취소", null)
+                .show()
+        }
+
+        fridgeAdapter = FridgeAdapter()
+        binding.fridgeRecyclerView.apply {
+            adapter = fridgeAdapter
         }
     }
 
     private fun observe() {
         viewModel.fridgeId?.observe(mActivity) {
-            Log.d("yj", "id : $it")
+            fridgeAdapter.setList(it)
         }
     }
 }
