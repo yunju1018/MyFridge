@@ -63,7 +63,7 @@ class FridgeFragment : BaseFragment() {
 
         binding.btnRemove.setOnClickListener{
             AlertDialog.Builder(mContext)
-                .setTitle("냉장고를 전체 삭제합니다.")
+                .setTitle("냉장고 목록을 전체 삭제합니다.")
                 .setPositiveButton("확인", object: DialogInterface.OnClickListener {
                     override fun onClick(p0: DialogInterface?, p1: Int) {
                         viewModel.deleteFridge()
@@ -73,7 +73,10 @@ class FridgeFragment : BaseFragment() {
                 .show()
         }
 
-        fridgeAdapter = FridgeAdapter()
+        fridgeAdapter = FridgeAdapter() {
+            viewModel.deleteByFridgeId(it)
+        }
+
         binding.fridgeRecyclerView.apply {
             adapter = fridgeAdapter
         }

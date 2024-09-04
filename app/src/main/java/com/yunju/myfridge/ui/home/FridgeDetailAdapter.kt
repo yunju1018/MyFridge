@@ -43,7 +43,7 @@ class FridgeDetailAdapter(val removeProduct: (position: Int) -> Unit): RecyclerV
 
                 itemView.setOnLongClickListener {
                     AlertDialog.Builder(itemView.context)
-                        .setTitle("${product.productName} 삭제하시겠습니까?")
+                        .setTitle("${product.productName} 항목을 삭제하시겠습니까?")
                         .setPositiveButton("확인", object: DialogInterface.OnClickListener {
                             override fun onClick(p0: DialogInterface?, p1: Int) {
                                 removeProduct(position)

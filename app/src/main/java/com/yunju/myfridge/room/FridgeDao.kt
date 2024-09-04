@@ -35,6 +35,10 @@ interface FridgeDao {
     suspend fun updateFridgeData(fridgeEntity: FridgeEntity)
 
     /* 냉장고 삭제 */
+    @Query("DELETE FROM fridgeTable WHERE id = :fridgeId")
+    suspend fun deleteByFridgeId(fridgeId: String)
+
+    /* 냉장고 전체 삭제 */
     @Query("DELETE FROM fridgeTable")
     suspend fun deleteAllFridge()
 }

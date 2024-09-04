@@ -58,6 +58,13 @@ class FridgeViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun deleteByFridgeId(id: String) {
+        Log.d("yj", "deleteByFridgeId")
+        viewModelScope.launch {
+            dao.deleteByFridgeId(id)
+        }
+    }
+
     fun deleteFridge() {
         Log.d("yj", "deleteFridge()")
         viewModelScope.launch {
