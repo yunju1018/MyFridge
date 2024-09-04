@@ -1,7 +1,8 @@
 package com.yunju.myfridge.ui.home
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -15,7 +16,7 @@ class FridgeDetailActivity : AppCompatActivity() {
     private val viewModel: FridgeViewModel by viewModels()
     private lateinit var binding: ActivityFridgeDetailBinding
     private lateinit var adapter: FridgeDetailAdapter
-    private lateinit var id : String
+    private lateinit var id: String
     private var productList = mutableListOf<Product>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,11 +41,33 @@ class FridgeDetailActivity : AppCompatActivity() {
 
     private fun setLayout() {
         binding.fridgeId.text = id
-        adapter = FridgeDetailAdapter() {
-            productList.removeAt(it)
-            val entity = FridgeEntity(id, productList)
-            viewModel.updateFridgeData(id, entity)
-        }
+        adapter = FridgeDetailAdapter(
+            editProduct = { position ->
+                val argInfo = ProductDetailDialog.ArgInfo(productList[position].productName, productList[position].dateAdded, productList[position].dateExpire)
+
+                ProductDetailDialog.newInstance(this, argInfo, addProduct = {
+                    productList[position].productName = it.productName
+                    productList[position].dateAdded = it.dateAdded
+                    productList[position].dateExpire = it.dateExpire
+
+                    val entity = FridgeEntity(id, productList)
+                    viewModel.updateFridgeData(id, entity)
+                })
+
+        }, removeProduct = {
+            AlertDialog.Builder(this)
+                .setTitle("${productList[it].productName} 항목을 삭제하시겠습니까?")
+                .setPositiveButton("확인", object: DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        productList.removeAt(it)
+                        val entity = FridgeEntity(id, productList)
+                        viewModel.updateFridgeData(id, entity)
+                    }
+                })
+                .setNeutralButton("취소", null)
+                .show()
+        })
+
         binding.fridgeRecyclerView.adapter = adapter
 
         binding.btnAdd.setOnClickListener {

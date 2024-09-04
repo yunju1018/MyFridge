@@ -12,8 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yunju.myfridge.R
 import com.yunju.myfridge.databinding.FridgeDetailItemBinding
 import com.yunju.myfridge.models.Product
+import com.yunju.myfridge.room.FridgeEntity
 
-class FridgeDetailAdapter(val removeProduct: (position: Int) -> Unit): RecyclerView.Adapter<FridgeDetailAdapter.FridgeViewHolder>(){
+class FridgeDetailAdapter(val editProduct: (position: Int) -> Unit, val removeProduct: (position: Int) -> Unit): RecyclerView.Adapter<FridgeDetailAdapter.FridgeViewHolder>(){
 
     private var productList = listOf<Product>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FridgeViewHolder {
@@ -41,16 +42,12 @@ class FridgeDetailAdapter(val removeProduct: (position: Int) -> Unit): RecyclerV
                 dateAdded.text = product.dateAdded
                 dateExpire.text = product.dateExpire
 
+                itemView.setOnClickListener {
+                    editProduct(position)
+                }
+
                 itemView.setOnLongClickListener {
-                    AlertDialog.Builder(itemView.context)
-                        .setTitle("${product.productName} 항목을 삭제하시겠습니까?")
-                        .setPositiveButton("확인", object: DialogInterface.OnClickListener {
-                            override fun onClick(p0: DialogInterface?, p1: Int) {
-                                removeProduct(position)
-                            }
-                        })
-                        .setNeutralButton("취소", null)
-                        .show()
+                    removeProduct(position)
                     false
                 }
             }

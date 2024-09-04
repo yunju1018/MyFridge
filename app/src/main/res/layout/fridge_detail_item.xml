@@ -18,7 +18,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="사과"
-                android:textSize="16sp"
+                android:textSize="16dp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -32,7 +32,8 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/productName"
-                    tools:text="2024.08.26" />
+                    tools:text="2024.08.26"
+                    android:textSize="15dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -40,7 +41,8 @@
                     android:layout_marginHorizontal="10dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/productName"
-                    tools:text="-" />
+                    android:text="-"
+                    android:textSize="15dp"/>
 
                 <TextView
                     android:id="@+id/dateExpire"
@@ -48,7 +50,8 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/productName"
-                    tools:text="2024.08.31" />
+                    tools:text="2024.08.31"
+                    android:textSize="15dp"/>
         </LinearLayout>
 
         </LinearLayout>
