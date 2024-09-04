@@ -24,7 +24,7 @@
                     android:layout_height="0dp"
                     android:gravity="center"
                     android:textStyle="bold"
-                    android:background="@color/purple"
+                    android:background="@color/lightPurple"
                     app:layout_constraintDimensionRatio="w, 1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

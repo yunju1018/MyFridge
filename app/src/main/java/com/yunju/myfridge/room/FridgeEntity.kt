@@ -8,5 +8,5 @@ import com.yunju.myfridge.models.Product
 class FridgeEntity (
     @PrimaryKey
     val id: String,
-//    val productList: ArrayList<Product>       // todo : TypeConverter 적용
+    val productList: List<Product>?       // todo : TypeConverter 적용
 )

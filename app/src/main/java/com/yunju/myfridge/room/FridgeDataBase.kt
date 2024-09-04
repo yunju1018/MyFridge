@@ -4,8 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.yunju.myfridge.util.Converter
 
 @Database(entities = [FridgeEntity::class], version = 1)
+@TypeConverters(Converter::class)
 abstract class FridgeDataBase : RoomDatabase() {
     abstract fun fridgeDao(): FridgeDao
 

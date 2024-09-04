@@ -1,5 +1,6 @@
 package com.yunju.myfridge.ui.home
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yunju.myfridge.R
 import com.yunju.myfridge.databinding.FridgeListItemBinding
 
-class FridgeAdapter: RecyclerView.Adapter<FridgeAdapter.FridgeViewHolder>(){
+class FridgeAdapter(val checkedList: () -> Unit): RecyclerView.Adapter<FridgeAdapter.FridgeViewHolder>(){
 
     private var fridgeList = listOf<String>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FridgeViewHolder {
@@ -34,7 +35,9 @@ class FridgeAdapter: RecyclerView.Adapter<FridgeAdapter.FridgeViewHolder>(){
             binding.fridgeId.text = fridgeId
 
             binding.fridgeItem.setOnClickListener {
-
+                val intent = Intent(itemView.context, FridgeDetailActivity::class.java)
+                intent.putExtra("fridgeId", fridgeId)
+                itemView.context.startActivity(intent)
             }
         }
     }

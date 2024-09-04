@@ -24,7 +24,7 @@ interface FridgeDao {
 
     /* 냉장고 목록 반환 */
     @Query("SELECT * FROM fridgeTable WHERE id = :fridgeId") // FridgeEntity (tableName : fridge) 에서 fridgeId 가져옴
-    fun getFridgeData(fridgeId: String) : FridgeEntity
+    suspend fun getFridgeData(fridgeId: String) : FridgeEntity
 
     /* 냉장고 목록 전체 반환, 오름차순 */
     @Query("SELECT * FROM fridgeTable ORDER BY id ASC")
