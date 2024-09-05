@@ -16,13 +16,13 @@ import com.yunju.myfridge.R
 import com.yunju.myfridge.databinding.DialogProductDetailBinding
 import com.yunju.myfridge.models.Product
 import java.io.Serializable
-import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ProductDetailDialog: AppCompatDialogFragment() {
     companion object {
         private const val EXTRA_PRODUCT_DIALOG_TAG = "PRODUCT_DIALOG"
         var addProduct: ((Product) -> Unit?)? = null
-        val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일")
+        val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
 
         fun newInstance(activity:AppCompatActivity, addProduct: (Product) -> Unit) {
             val productDetailDialog = ProductDetailDialog()
@@ -85,15 +85,18 @@ class ProductDetailDialog: AppCompatDialogFragment() {
 
             btnAdd.setOnClickListener {
                 val productName = productNameEdit.text.toString()
-                val productCount = productAddedDateEdit.text.toString()
-                val productDate = productExpireDateEdit.text.toString()
+                val productAddedDate = productAddedDateEdit.text.toString()
+                val productExpireDate = productExpireDateEdit.text.toString()
 
-                if (productName.isEmpty() && productCount.isEmpty() && productDate.isEmpty()) {
-                    Toast.makeText(context, "상품을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                if (productName.isEmpty()) {
+                    Toast.makeText(context, "상품명은 필수 입력 값 입니다.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                } else if (productAddedDate.isEmpty()) {
+                    Toast.makeText(context, "상품 입고일은 필수 입력 값 입니다.", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
 
-                addProduct?.invoke(Product(productName, productCount, productDate))
+                addProduct?.invoke(Product(productName, productAddedDate, productExpireDate))
                 dialog?.dismiss()
             }
 

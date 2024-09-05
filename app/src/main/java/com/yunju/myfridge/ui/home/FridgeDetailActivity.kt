@@ -42,9 +42,8 @@ class FridgeDetailActivity : AppCompatActivity() {
     private fun setLayout() {
         binding.fridgeId.text = id
         adapter = FridgeDetailAdapter(
-            editProduct = { position ->
-                val argInfo = ProductDetailDialog.ArgInfo(productList[position].productName, productList[position].dateAdded, productList[position].dateExpire)
-
+            editProduct = { position, product ->
+                val argInfo = ProductDetailDialog.ArgInfo(product.productName, product.dateAdded, product.dateExpire)
                 ProductDetailDialog.newInstance(this, argInfo, addProduct = {
                     productList[position].productName = it.productName
                     productList[position].dateAdded = it.dateAdded
