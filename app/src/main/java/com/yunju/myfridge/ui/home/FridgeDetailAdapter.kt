@@ -1,5 +1,6 @@
 package com.yunju.myfridge.ui.home
 
+import android.graphics.BlurMaskFilter
 import android.icu.util.Calendar
 import android.util.Log
 import android.view.LayoutInflater
@@ -53,7 +54,7 @@ class FridgeDetailAdapter(val editProduct: (position: Int, product: Product) -> 
                     dateExpire.visibility = View.VISIBLE
                 }
 
-                setRemainDate(product.dateExpire)
+                setRemainDate(product.dateAdded, product.dateExpire)
 
                 itemView.setOnClickListener {
                     editProduct(position, product)
@@ -66,9 +67,9 @@ class FridgeDetailAdapter(val editProduct: (position: Int, product: Product) -> 
             }
         }
 
-        private fun setRemainDate(expireDate: String?) {
+        private fun setRemainDate(addedDate: String?, expireDate: String?) {
             val calendar = Calendar.getInstance()
-
+            val remainTextView = binding.remainTextView
             if (!expireDate.isNullOrEmpty()) {
                 calendar.time = dateFormat.parse(expireDate)
 
@@ -77,14 +78,24 @@ class FridgeDetailAdapter(val editProduct: (position: Int, product: Product) -> 
 
                 Log.d("yj", "$remainDate 남음")
 
-                val remainTextView = binding.remainTextView
+
                 if(remainDate > 0) {
                     remainTextView.text = "D - $remainDate"
                 } else if (remainDate == 0) {
                     remainTextView.text = "오늘까지"
                 } else {
-                    remainTextView.text = "${-remainDate} 일 경과"
-                    binding.remainTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
+                    remainTextView.text = "${-remainDate} 일 지남"
+                    remainTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
+                }
+            } else {
+                addedDate?.let {
+                    calendar.time = dateFormat.parse(addedDate)
+
+                    val addedTime = today.time.time - calendar.time.time
+                    val elapsedTime = (addedTime / (24 * 60 * 60 * 1000)).toInt()
+
+                    remainTextView.text = "${elapsedTime} 일 경과"
+                    remainTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.blue))
                 }
             }
         }

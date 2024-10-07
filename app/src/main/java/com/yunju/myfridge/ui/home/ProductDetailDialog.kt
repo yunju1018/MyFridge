@@ -16,13 +16,13 @@ import com.yunju.myfridge.R
 import com.yunju.myfridge.databinding.DialogProductDetailBinding
 import com.yunju.myfridge.models.Product
 import java.io.Serializable
+import java.text.SimpleDateFormat
 import java.util.Locale
 
 class ProductDetailDialog: AppCompatDialogFragment() {
     companion object {
         private const val EXTRA_PRODUCT_DIALOG_TAG = "PRODUCT_DIALOG"
-        var addProduct: ((Product) -> Unit?)? = null
-        val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
+        private var addProduct: ((Product) -> Unit?)? = null
 
         fun newInstance(activity:AppCompatActivity, addProduct: (Product) -> Unit) {
             val productDetailDialog = ProductDetailDialog()
@@ -50,6 +50,7 @@ class ProductDetailDialog: AppCompatDialogFragment() {
 
     lateinit var binding : DialogProductDetailBinding
     private var argInfo: ArgInfo? = null
+    private val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
