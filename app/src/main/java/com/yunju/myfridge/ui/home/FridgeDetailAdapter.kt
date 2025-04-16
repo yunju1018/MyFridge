@@ -1,6 +1,5 @@
 package com.yunju.myfridge.ui.home
 
-import android.graphics.BlurMaskFilter
 import android.icu.util.Calendar
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,14 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yunju.myfridge.R
 import com.yunju.myfridge.databinding.FridgeDetailItemBinding
 import com.yunju.myfridge.models.Product
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.yunju.myfridge.util.DateUtil
 
 class FridgeDetailAdapter(val editProduct: (position: Int, product: Product) -> Unit, val removeProduct: (position: Int) -> Unit): RecyclerView.Adapter<FridgeDetailAdapter.FridgeViewHolder>(){
 
     private var productList = listOf<Product>()
     private val today = Calendar.getInstance()
-    val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FridgeViewHolder {
         val binding : FridgeDetailItemBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.fridge_detail_item, parent, false)
@@ -71,25 +68,26 @@ class FridgeDetailAdapter(val editProduct: (position: Int, product: Product) -> 
             val calendar = Calendar.getInstance()
             val remainTextView = binding.remainTextView
             if (!expireDate.isNullOrEmpty()) {
-                calendar.time = dateFormat.parse(expireDate)
+                calendar.time = DateUtil.FORMAT_DATE_YYYY_YEAR_MM_MONTH_DD_DAY.parse(expireDate)
 
                 val remainTime = calendar.time.time - today.time.time
                 val remainDate = (remainTime / (24 * 60 * 60 * 1000)).toInt()
 
-                Log.d("yj", "$remainDate 남음")
-
+                Log.d("yj", "remainDate : $remainDate")
 
                 if(remainDate > 0) {
                     remainTextView.text = "D - $remainDate"
+                    remainTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.black))
                 } else if (remainDate == 0) {
                     remainTextView.text = "오늘까지"
+                    remainTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
                 } else {
                     remainTextView.text = "${-remainDate} 일 지남"
                     remainTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
                 }
             } else {
                 addedDate?.let {
-                    calendar.time = dateFormat.parse(addedDate)
+                    calendar.time = DateUtil.FORMAT_DATE_YYYY_YEAR_MM_MONTH_DD_DAY.parse(addedDate)
 
                     val addedTime = today.time.time - calendar.time.time
                     val elapsedTime = (addedTime / (24 * 60 * 60 * 1000)).toInt()

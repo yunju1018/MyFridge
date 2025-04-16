@@ -15,9 +15,8 @@ import androidx.databinding.DataBindingUtil
 import com.yunju.myfridge.R
 import com.yunju.myfridge.databinding.DialogProductDetailBinding
 import com.yunju.myfridge.models.Product
+import com.yunju.myfridge.util.DateUtil
 import java.io.Serializable
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class ProductDetailDialog: AppCompatDialogFragment() {
     companion object {
@@ -50,7 +49,6 @@ class ProductDetailDialog: AppCompatDialogFragment() {
 
     lateinit var binding : DialogProductDetailBinding
     private var argInfo: ArgInfo? = null
-    private val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -73,7 +71,7 @@ class ProductDetailDialog: AppCompatDialogFragment() {
                 productExpireDateEdit.text = it.productExpireDate
             } ?: run {
                 val date = Calendar.getInstance().time
-                productAddedDateEdit.text = dateFormat.format(date)
+                productAddedDateEdit.text = DateUtil.FORMAT_DATE_YYYY_YEAR_MM_MONTH_DD_DAY.format(date)
             }
 
             productAddedDateEdit.setOnClickListener {
@@ -110,15 +108,17 @@ class ProductDetailDialog: AppCompatDialogFragment() {
     private fun showDatePickerDialog(textView: TextView) {
         val selectDate = Calendar.getInstance()
 
-        try {
-            selectDate.time = dateFormat.parse(textView.text.toString())
-        } catch (e: Exception) {
-            Log.d("yj", "getCalendar() Exception : $e")
+        if (textView.text.toString().isNotEmpty()) {
+            try {
+                selectDate.time = DateUtil.FORMAT_DATE_YYYY_YEAR_MM_MONTH_DD_DAY.parse(textView.text.toString())
+            } catch (e: Exception) {
+                Log.d("yj", "getCalendar() Exception : $e")
+            }
         }
 
         val listener = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
             selectDate.set(year, month, day)
-            textView.text = dateFormat.format(selectDate.time)
+            textView.text = DateUtil.FORMAT_DATE_YYYY_YEAR_MM_MONTH_DD_DAY.format(selectDate.time)
         }
 
         val datePickerDialog = DatePickerDialog(requireContext(), listener, selectDate.get(Calendar.YEAR), selectDate.get(Calendar.MONDAY), selectDate.get(Calendar.DAY_OF_MONTH))
